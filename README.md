@@ -1,28 +1,23 @@
-Symfony Standard Edition
-========================
+Symfony 3 Sarter Kit
+====================
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
+Welcome to the Symfony Starter Kit - a fully-functional Symfony
 application that you can use as the skeleton for your new applications.
 
 For details on how to download and get started with Symfony, see the
 [Installation][1] chapter of the Symfony Documentation.
 
 What's inside?
---------------
-
-The Symfony Standard Edition is configured with the following defaults:
-
-  * An AppBundle you can use to start coding;
-
-  * Twig as the only configured template engine;
-
-  * Doctrine ORM/DBAL;
-
-  * Swiftmailer;
-
-  * Annotations enabled for everything.
 
 It comes pre-configured with the following bundles:
+
+  * An Easy-Admin Bundle for Backend;
+  
+  * Fos User Bundle;
+    
+  * Pagerfanta for pagination;
+  
+  * Triton for Simple CRUD generation;
 
   * **FrameworkBundle** - The core Symfony framework bundle
 
@@ -53,7 +48,7 @@ It comes pre-configured with the following bundles:
   * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
     integration
 
-All libraries and bundles included in the Symfony Standard Edition are
+All libraries and bundles included in the Symfony Starter Kit are
 released under the MIT or BSD license.
 
 Enjoy!
