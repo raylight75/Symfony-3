@@ -1,8 +1,8 @@
-Symfony 3 Sarter Kit
+Symfony 3 Starter Kit
 ====================
 
 Welcome to the Symfony Starter Kit - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+application that you can use as the skeleton for your new CMS applications.
 
 For details on how to download and get started with Symfony, see the
 [Installation][1] chapter of the Symfony Documentation.
