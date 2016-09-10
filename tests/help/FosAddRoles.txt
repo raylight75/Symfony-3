@@ -1,0 +1,67 @@
+The way FOSUserBundle deals with Roles is to store them in the roles column that you've seen, in a serialised format like this: a:1:{i:0;s:10:"ROLE_ADMIN";}. So there's no need for any other tables or entities^.
+
+^ This is in contrast to Groups, which need to be explicitly configured, are represented by a separate Table/Entity, and do involve relating Users to Groups in the DB. Groups let you define arbitrary collections of Roles which can then be given to each User as a discrete bundle.
+
+A User can be a member of any number of Roles. They're identified by strings starting with "ROLE_", you can just start using a new Role.
+
+What the Roles mean for your application is completely up to you, but they're quite a high-level tool - a User is either in a particular Role or they aren't.
+
+You put people in Roles either via the Symfony console:
+
+php app/console fos:user:promote testuser ROLE_ADMIN
+Or in PHP:
+
+$user = $this->getUser();
+$userManager = $container->get('fos_user.user_manager');
+$user->addRole('ROLE_ADMIN');
+$userManager->updateUser($user);
+And you can test membership in PHP:
+
+$user = $this->getUser();
+if ($user->hasRole('ROLE_ADMIN'))
+{
+    //do something
+}
+Or using Annotations:
+
+/**
+ * @Security("has_role('ROLE_ADMIN')")
+ */
+ public function adminAction()
+ {
+     //...
+or
+
+/**
+ * @Security("has_role('ROLE_ADMIN')")
+ */
+class AdminController
+{
+    //...
+
+
+
+ Added the functionality to add default group to the user during registration by overriding the confirmAction in Registration Controller
+
+What I did is I overrided the Registration Controller in my project Bundle by defining the parent to FosUserBUndle .
+
+Then created a function confirmedAction and in the body of the function added this code
+
+$repository = $em->getRepository('AdminAdminBundle:Group');
+        $group = $repository->findOneByName('staff');
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $this->getUser();
+        $user->addGroup($group);
+
+        $userManager = $this->get('fos_user.user_manager');
+
+        $userManager->updateUser($user);
+
+        if (!is_object($user) || !$user instanceof FOS\UserBundle\Model\UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+
+        return $this->render('FOSUserBundle:Registration:confirmed.html.twig', array(
+            'user' => $user,
+        ));

@@ -1,0 +1,114 @@
+// src/Yoda/EventBundle/Controller/EventController.php
+// ...
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+// ...
+
+public function newAction()
+{
+    $securityContext = $this->container->get('security.context');
+    if (!$securityContext->isGranted('ROLE_ADMIN')) {
+        throw new AccessDeniedException('Only an admin can do this!!!!')
+    }
+
+    // ...
+}
+
+
+SYMFONY 2.5
+
+// src/Yoda/EventBundle/Controller/EventController.php
+// ...
+
+if (!$securityContext->isGranted('ROLE_ADMIN')) {
+    // in Symfony 2.5
+    throw $this->createAccessDeniedException('message!');
+}
+
+
+
+
+
+firewalls:
+    main:
+        pattern: ^/
+        form_login:
+            provider: fos_userbundle
+            csrf_provider: form.csrf_provider
+            login_path: /login
+            check_path: /login_check
+            always_use_default_target_path: false
+            default_target_path:            /your/start/path/
+
+firewalls:
+      admin:
+            pattern:  /admin(.*)
+            context:  user
+            form_login:
+                 provider:       fos_userbundle
+                 login_path:     /admin/login
+                 use_forward:    false
+                 check_path:     /admin/login_check
+                 failure_path:   null
+
+Just redirect in the controller of the page that you added in  default_target_path to the wanted direction, for example, if you put for  default_target_path: /index and index is an action defined in HomePageCOntroller, go to HomePageCOntroller, test if the current user is admin or not with:
+
+if (($this->container->get('security.context')->isGranted('ROLE_ADMIN'))) 
+
+
+his route is placed to the bottom of the routing.yml file, so if there is a route that matches an existing route, it will not get redirected to the RedirectController, but to the controller specific to that route.
+
+admin:
+pattern: /admin/{var}
+requirements:
+    var: "^(?!(login|login_check|logout)$).*"
+defaults: { _controller: UserBundle:Redirect:index }
+
+
+Step 2 Make sure that routes that are required for the login are available for the IS_AUTHENTICATED_ANONYMOUSLY (whitelist) in security.yml.
+
+access_control:
+    - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/admin/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: "^/admin", roles: ROLE_USER }
+
+
+In the security.yml you can specify a login_path, in example:
+
+    my_firewall:
+        pattern: ^/(secured_area)/
+        provider: my_provider
+        anonymous: ~
+        form_login:
+            login_path:  my_login_path
+            default_target_path: /dashboard
+
+And in the routing.yml you can map the route as:
+
+my_login_path:
+    pattern:   /my/relative/url/for/login
+    defaults:  { _controller: MySecurityBundle:Security:login }
+then you can use an a normal route, in you specific case:
+
+    return $this->forward($this->generateUrl('my_login_path'));
+
+
+
+
+public function redirectAction(){
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')){
+             $render = $this->forward('MyHomeBundle:Installation:selectInstallation', array('userId'=>$user=$this->get('security.context')->getToken()->getUser()->getId()) );
+        }
+        elseif($this->get('security.context')->isGranted('ROLE_USER')){
+            $render = $this->forward('MyHomeBundle:Installation:selectInstallation', array('userId'=>$user=$this->get('security.context')->getToken()->getUser()->getId()) );
+        }
+        else {
+           // INSERT FORWARD TO THE LOGIN SCREEN
+        }
+        return $render;
+    }
+
+
+if($securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+      return $this->redirect($this->generateUrl('homepage'));
+}

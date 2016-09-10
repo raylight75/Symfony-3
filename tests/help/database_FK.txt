@@ -1,0 +1,21 @@
+I created a solution based on all comments that simplifies the code
+
+on class namespace Doctrine\ORM\Mapping\Driver; DatabaseDriver.php
+
+On line 277, change:
+
+if (!$table->hasPrimaryKey()) {
+      // comment this Throw exception
+      // throw new MappingException(
+      // “Table “ . $table->getName() . “ has no primary key.
+      // Doctrine does not “.
+      // “support reverse engineering from tables that don’t
+      // have a primary key.”
+      // );
+} else {
+     $pkColumns = $table->getPrimaryKey()->getColumns();
+}
+And, on line 488, add:
+
+if( $table->hasPrimaryKey() ) //add this if to avoid fatalError
+ return $table->getPrimaryKey()->getColumns();

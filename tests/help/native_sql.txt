@@ -1,0 +1,34 @@
+$conn = $this->container->get('database_connection');
+$sql = 'SELECT res.id, COUNT(*)...';
+$rows = $conn->query($sql);
+
+class UserController extends Controller
+{
+    public function indexAction()
+    {
+        $conn = $this->get('database_connection');
+        $users = $conn->fetchAll('SELECT * FROM users');
+
+        // ...
+    }
+}
+
+$em = $this->getDoctrine()->getEntityManager();
+$connection = $em->getConnection();
+$statement = $connection->prepare("SELECT something FROM somethingelse WHERE id = :id");
+$statement->bindValue('id', 123);
+$statement->execute();
+$results = $statement->fetchAll();
+
+
+
+<?php
+use Doctrine\ORM\Query\ResultSetMapping;
+
+$rsm = new ResultSetMapping();
+// build rsm here
+
+$query = $entityManager->createNativeQuery('SELECT id, name, discr FROM users WHERE name = ?', $rsm);
+$query->setParameter(1, 'romanb');
+
+$users = $query->getResult();

@@ -1,0 +1,117 @@
+Install:
+
+composer create-project symfony/framework-standard-edition my_project_name
+
+php app/console server:run
+
+php -r "readfile('http://symfony.com/installer');" > symfony
+move symfony c:\projects
+projects\> php symfony
+
+Configuration:
+
+http://localhost/symfony/web/app_dev.php
+http://localhost/symfony/web/app_dev.php/_configurator
+
+Packages:
+
+composer require friendsofsymfony/user-bundle "~2.0@dev"
+composer require knplabs/knp-paginator-bundle
+
+Database:
+
+Existing Database
+
+php app/console doctrine:mapping:import --force AcmeBlogBundle xml/or yml
+php app/console doctrine:mapping:convert annotation ./src
+php app/console doctrine:generate:entities AcmeBlogBundle
+
+Specific table:
+php app/console doctrine:mapping:convert xml ./src/App/MyBundle/Resources/config/doctrine/metadata/orm --from-database --force
+php app/console doctrine:mapping:import --force AppBundle xml --filter="Meeting"
+php app/console doctrine:mapping:convert annotation ./src/AppBundle/Entity --from-database --filter="Meeting"
+php app/console doctrine:generate:entities AppBundle:Meeting --no-backup
+
+The first command generates entity classes with annotation mappings.
+But if you want to use YAML or XML mapping instead of annotations, you should execute the second command only.
+
+If you want to use annotations, you can safely delete the XML (or YAML) files after running these two commands.
+
+php app/console doctrine:database:drop --force
+php app/console doctrine:database:create
+
+Setting UTF8 defaults for MySQL is as simple as adding a few lines to your configuration file (typically my.cnf):
+[mysqld]
+# Version 5.5.3 introduced "utf8mb4", which is recommended
+collation-server     = utf8mb4_general_ci # Replaces utf8_general_ci
+character-set-server = utf8mb4            # Replaces utf8
+
+php app/console doctrine:mapping:info
+
+php app/console doctrine:generate:entity
+
+If you want to create your own function to query or manipulate your data,
+you need to create a custom repository class for an entity.
+To do so, you need to add the name of the repository class to your mapping definition.
+
+Anotation:
+/**
+ * @orm:Entity(repositoryClass="Acme\HelloBundle\Repository\UserRepository")
+ */
+YML:
+repositoryClass: Acme\HelloBundle\Repository\UserRepository
+XML:
+repository-class="Acme\HelloBundle\Repository\UserRepository"
+
+
+php app/console doctrine:generate:entities AppBundle/Entity/Product
+# generates all entities in the AppBundle
+php app/console doctrine:generate:entities AppBundle
+
+# generates all entities of bundles in the Acme namespace
+php app/console doctrine:generate:entities Acme
+
+php app/console doctrine:schema:update --force
+
+
+CLEAR CACHE:
+
+php bin/console cache:clear
+
+Simple Working Solution for Symfony 2.7 option annotation and for [/xml/yml] see http://symfony.com/doc/current/cookbook/doctrine/reverse_engineering.html
+
+do 3 commands in 3 steps:
+
+$ php app/console doctrine:mapping:import --force AppBundle xml --filter="Meeting"
+(NOTE: if your database name is my_meeting You will need to change it to MyMeeting in filter="MyMeeting" for doctrine to find your table name. This is because doctrine will always strip underscores and add Camel-case to your table name. If not, you will get this error: "Database does not have any mapping information".)
+
+$ php app/console doctrine:mapping:convert annotation ./src/AppBundle/Entity --from-database --filter="Meeting"
+(NOTE: making sure you have namespace AppBundle\Entity; as below in your Meeting.php class file like this:
+
+<?php
+/**
+* Created by PhpStorm.
+* User:
+* Date: 03-Sep-2015
+* Time: 3:23 PM
+*/
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+If not add it in.)
+
+where:
+
+AppBundle is exactly your "AppBundle" in Symfony 2.7
+Meeting is the target table (Camel-Case sensitive)
+TO BE SURE, check this directory:
+
+src\AppBundle/Resources/config/doctrine/Meeting.orm.xml
+AND MAKING SURE you only have .xml files for the table you want to create entity class files and no others. Then run this below command to generate get and set methods for your entity class that you created previously
+
+$ php app/console doctrine:generate:entities AppBundle:Meeting --no-backup
+NOTE2: As the last step you must delete the xml doctrine orm db file in for example src\AppBundle/Resources/config/doctrine/VisitorData.orm.xml
+
+It works very well for me.
+
+For explanation please read: http://symfony.com/doc/current/cookbook/doctrine/reverse_engineering.html

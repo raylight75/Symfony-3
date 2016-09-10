@@ -1,0 +1,104 @@
+{% extends 'TritonCrudBundle::base.html.twig' %}
+
+{% block title %}
+{{ parent() }} - product
+{% endblock %}
+
+{% block body %}
+
+<header class="panel-heading">
+    <h2> Products</h2>
+</header>
+<div class="panel-body">
+
+    <form class="form form-vertical">
+        <fieldset>            <div class="control-group">
+                <label class="col-sm-2 control-label">Id</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.id }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Slug</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.slug }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.name }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.description }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Aimg</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.aImg }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Bimg</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.bImg }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Cimg</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.cImg }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Brand</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.brandId }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Catid</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.catId }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Parentid</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.parentId }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Quantity</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.quantity }}</span>
+                </div>
+            </div>            <div class="control-group">
+                <label class="col-sm-2 control-label">Price</label>
+                <div class="col-sm-10">
+                    <span class="input-xlarge uneditable-input">{{ product.price }}</span>
+                </div>
+            </div>        </fieldset>
+    </form>
+        <hr>
+        <div class="form-group">
+    <a class="btn btn-default" href="{{ path('products') }}">
+        <i class="fa fa-list" aria-hidden="true"></i>
+        Back to list
+    </a>
+            <a class="btn btn-success" href="{{ path('products_edit', { 'id':  product.id }) }}">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            Edit
+        </a>
+                <a class="btn btn-primary" href="{{ path('products_new') }}">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            New
+        </a>
+                <form action="{{ path('products_delete', { 'id': product.id }) }}" method="post" style="display: inline-block">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure');">
+                <i class="fa fa-trash-o"></i> 
+                Delete</button>
+        </form>
+    </div>
+
+</div>
+<hr>
+
+{% endblock %}
+
