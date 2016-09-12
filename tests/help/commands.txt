@@ -22,9 +22,9 @@ Database:
 
 Existing Database
 
-php bin/console doctrine:mapping:import --force AcmeBlogBundle xml/or yml
-php bin/console doctrine:mapping:convert annotation ./src
-php bin/console doctrine:generate:entities AcmeBlogBundle
+php bin/console doctrine:mapping:import --force AppBundle xml --filter="Orders"
+php bin/console doctrine:mapping:convert annotation ./src/AppBundle/Entity --from-database --filter="Orders"
+php bin/console doctrine:generate:entities AppBundle:Orders --no-backup
 
 Specific table:
 php bin/console doctrine:mapping:import --force AppBundle xml --filter="Meeting"
