@@ -21,7 +21,7 @@ use AppBundle\Form\ProductsFilterType;
  *
  * @Route("/products")
  */
-class ProductsController extends controller
+class ProductsController extends Controller
 {
     /**
      * Lists all Products entities.
